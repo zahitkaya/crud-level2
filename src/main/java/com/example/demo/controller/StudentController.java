@@ -85,16 +85,26 @@ public class StudentController {
     @ApiOperation("Get a student from ID")
     public Student getStudentBody(@PathVariable @Valid Integer id) {
         return studentService.getStudentById(id);
-
     }
 
     @GetMapping("")
     @ApiOperation("Redirecting to Api URL")
-    void redirectToApiUrl(HttpServletResponse response) throws IOException {
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Redirected"),
+            @ApiResponse(code = 500, message = "Internal Server Error"),
+    })
+    public void redirectToApiUrl(HttpServletResponse response) throws IOException {
         response.sendRedirect("swagger-ui/#/Student");
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Students Listed"),
+            @ApiResponse(code = 404, message = "Page not exist"),
+            @ApiResponse(code = 500, message = "Internal Server Error"),
+    })
+
     @GetMapping("school/v1/studentsPage")
+    @ApiOperation("Student List With Page")
     public List<Student> findAllPaginated(@RequestParam("pageNumber") int pageNumber) {
         Page<Student> resultPage = studentService.getPaginatedCharacters(pageNumber);
         return resultPage.getContent();

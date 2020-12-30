@@ -53,6 +53,7 @@ public class StudentServiceImpl implements IStudentService {
         return student;
     }
 
+    @Override
     public Page<Student> getPaginatedCharacters(int pageNumber) {
         PageRequest pageable = PageRequest.of(pageNumber - 1, 2);
         Page<Student> resultPage = studentRepository.findAll(pageable);
