@@ -1,22 +1,17 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Student;
+import com.example.demo.model.request.StudentRequestDto;
+import com.example.demo.model.response.StudentResponseDto;
 import com.example.demo.service.StudentServiceImpl;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.xml.stream.events.Characters;
 import java.io.IOException;
 import java.util.List;
 
@@ -36,7 +31,7 @@ public class StudentController {
     })
     @ApiOperation("Get all students as list")
     @GetMapping("school/v1/students")
-    public List<Student> getAllStudents() {
+    public List<StudentResponseDto> getAllStudents() {
         return studentService.getAllStudents();
     }
 
@@ -48,7 +43,7 @@ public class StudentController {
             @ApiResponse(code = 500, message = "Internal Server Error")
     })
     @ApiOperation("Add a new Student")
-    public Student addStudent(@RequestBody @Valid Student student) {
+    public StudentResponseDto addStudent(@RequestBody @Valid StudentRequestDto student) {
         return studentService.addStudent(student);
     }
 
@@ -59,7 +54,7 @@ public class StudentController {
             @ApiResponse(code = 500, message = "Internal Server Error"),
     })
     @ApiOperation("Update a Student")
-    public Student updateStudent(@PathVariable Integer id, @RequestBody @Valid Student student) {
+    public StudentResponseDto updateStudent(@PathVariable Integer id, @RequestBody @Valid StudentRequestDto student) {
         return studentService.updateStudentById(id, student);
     }
 
@@ -83,7 +78,7 @@ public class StudentController {
     @GetMapping("school/v1/students/{id}")
     @ResponseStatus(HttpStatus.OK)
     @ApiOperation("Get a student from ID")
-    public Student getStudentBody(@PathVariable @Valid Integer id) {
+    public StudentResponseDto getStudentBody(@PathVariable @Valid Integer id) {
         return studentService.getStudentById(id);
     }
 
@@ -109,5 +104,7 @@ public class StudentController {
         Page<Student> resultPage = studentService.getPaginatedCharacters(pageNumber);
         return resultPage.getContent();
     }
+
+
 
 }

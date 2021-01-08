@@ -1,15 +1,17 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Student;
+import com.example.demo.model.request.StudentRequestDto;
+import com.example.demo.model.response.StudentResponseDto;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface IStudentService {
-    public List<Student> getAllStudents();
-    public Student addStudent(Student student);
-    public Student updateStudentById(int id,Student student);
+    public List<StudentResponseDto> getAllStudents();
+    public StudentResponseDto addStudent(StudentRequestDto studentRequest);
+    public StudentResponseDto updateStudentById(int id, StudentRequestDto student);
     public void deleteStudentById(int id);
-    public Student getStudentById(int id);
+    public StudentResponseDto getStudentById(int id);
     public Page<Student> getPaginatedCharacters(int pageNumber);
 }
