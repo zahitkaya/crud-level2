@@ -2,11 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Student;
 import com.example.demo.model.request.StudentRequestDto;
+import com.example.demo.model.response.GenericPagedDto;
 import com.example.demo.model.response.StudentResponseDto;
 import com.example.demo.service.StudentServiceImpl;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +23,7 @@ import java.util.List;
 @Api(tags = "Student", description = "Student Service")
 public class StudentController {
     final StudentServiceImpl studentService;
-
-
+    /*
     @ResponseStatus(HttpStatus.CREATED)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Students Selected"),
@@ -34,6 +35,7 @@ public class StudentController {
     public List<StudentResponseDto> getAllStudents() {
         return studentService.getAllStudents();
     }
+     */
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("school/v1/students")
@@ -92,17 +94,12 @@ public class StudentController {
         response.sendRedirect("swagger-ui/#/Student");
     }
 
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Students Listed"),
-            @ApiResponse(code = 404, message = "Page not exist"),
-            @ApiResponse(code = 500, message = "Internal Server Error"),
-    })
-
-    @GetMapping("school/v1/studentsPage")
-    @ApiOperation("Student List With Page")
-    public List<Student> findAllPaginated(@RequestParam("pageNumber") int pageNumber) {
-        Page<Student> resultPage = studentService.getPaginatedCharacters(pageNumber);
-        return resultPage.getContent();
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Students Listed"), @ApiResponse(code = 404, message = "Page not exist"), @ApiResponse(code = 500, message = "Internal Server Error"), @ApiResponse(code = 200, message = "Students Selected"), @ApiResponse(code = 404, message = "Students Not Found"), @ApiResponse(code = 500, message = "Internal Server Error")})
+    @ApiOperation("Get all students as list")
+    @GetMapping("school/v1/students")
+    @ResponseStatus(HttpStatus.OK)
+    public GenericPagedDto<StudentResponseDto> listStudents(Pageable page) {
+        return studentService.listInvoice(page);
     }
 
 

@@ -17,33 +17,32 @@ public class StudentLoader {
     final StudentRepository studentRepository;
 
 
-@PostConstruct
-    public void dataInitStudent(){
+    @PostConstruct
+    public void dataInitStudent() {
 
-    Calendar c = Calendar.getInstance();
-    c.add(Calendar.YEAR, 5);
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.YEAR, 5);
 
-    Student student1=Student.builder()
-            .firstName("Zahit")
-            .lastName("Kaya")
-            .email("a@a.com")
-            .age(15)
-            .signInDate(new Date())
-            .graduateYear(c.getTime())
-            .build();
+        Student student1 = Student.builder()
+                .firstName("Zahit")
+                .lastName("Kaya")
+                .email("a@a.com")
+                .age(15)
+                .signInDate(new Date())
 
-
-    Student student2=Student.builder()
-            .firstName("Mehmet")
-            .lastName("Pınar")
-            .email("b@b.com")
-            .age(16)
-            .graduateYear(c.getTime())
-            .signInDate(new Date())
-            .build();
+                .build();
 
 
-    studentRepository.save(student1);
-    studentRepository.save(student2);
-}
+        Student student2 = Student.builder()
+                .firstName("Mehmet")
+                .lastName("Pınar")
+                .email("b@b.com")
+                .age(16)
+                .signInDate(new Date())
+                .build();
+
+
+        studentRepository.save(student1);
+        studentRepository.save(student2);
+    }
 }

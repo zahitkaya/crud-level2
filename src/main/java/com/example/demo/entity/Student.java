@@ -1,5 +1,6 @@
 package com.example.demo.entity;
 
+import com.example.demo.audit.Auditable;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.*;
@@ -17,7 +18,7 @@ import java.util.Date;
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Student {
+public class Student extends Auditable<String> {
     @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "sequence_example")
     @SequenceGenerator(name = "sequence_example",initialValue = 100, allocationSize = 100)
     @Id
@@ -34,6 +35,6 @@ public class Student {
 
     Date signInDate;
 
-    Date graduateYear;
+
 
 }

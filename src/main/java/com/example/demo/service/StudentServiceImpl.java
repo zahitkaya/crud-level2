@@ -5,13 +5,20 @@ import com.example.demo.entity.Student;
 import com.example.demo.error.ResourceNotFoundException;
 import com.example.demo.mapper.StudentMapper;
 import com.example.demo.model.request.StudentRequestDto;
+import com.example.demo.model.response.GenericPagedDto;
 import com.example.demo.model.response.StudentResponseDto;
 import com.example.demo.repository.StudentRepository;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
@@ -27,6 +34,7 @@ public class StudentServiceImpl implements IStudentService {
     final StudentRepository studentRepository;
     final StudentMapper studentMapper;
 
+
     @Override
     public List<StudentResponseDto> getAllStudents() {
         var studentList= studentRepository.findAll();
@@ -38,10 +46,10 @@ public class StudentServiceImpl implements IStudentService {
     @Override
     public StudentResponseDto addStudent(StudentRequestDto studentRequest){
         if (studentRepository.existsStudentByEmail(studentRequest.getEmail()))throw new ResponseStatusException(HttpStatus.CONFLICT, "Student already exist");
-        var newStudent=  (studentMapper.studentRequestToStudentEntity(studentRequest));
-        var responseStudent=studentMapper.studentEntityToStudentDto(newStudent);
-        studentRepository.save(studentMapper.studentResponseToStudentEntity(responseStudent));
-        return responseStudent;
+        var newStudent=  studentMapper.studentRequestToStudentEntity(studentRequest);
+        newStudent.setSignInDate(new Date());
+        newStudent=studentRepository.save(newStudent);
+        return studentMapper.studentEntityToStudentDto(newStudent);
     }
 
     @Override
@@ -67,16 +75,13 @@ public class StudentServiceImpl implements IStudentService {
     }
 
     @Override
-    public Page<Student> getPaginatedCharacters(int pageNumber) {
-        PageRequest pageable = PageRequest.of(pageNumber - 1, 2);
-        Page<Student> resultPage = studentRepository.findAll(pageable);
-        if (pageNumber > resultPage.getTotalPages()) {
-            throw new ResourceNotFoundException("Not Found Page Number:","pageNumber",pageNumber);
-        }
-        return resultPage;
+    public GenericPagedDto<StudentResponseDto> listInvoice(Pageable page) {
+        Page<Student> invoices = invoices = studentRepository.findAll(page);
+
+
+        return new GenericPagedDto(invoices
+                .stream()
+                .map(invoice -> studentMapper.studentEntityToStudentDto(invoice))
+                .collect(Collectors.toList()), page,invoices.getTotalElements());
     }
-
-
-//kayıt varsa 409 yoksa 404
-
 }

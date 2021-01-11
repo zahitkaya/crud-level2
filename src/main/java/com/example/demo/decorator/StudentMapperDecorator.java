@@ -5,54 +5,54 @@ import com.example.demo.entity.Student;
 import com.example.demo.mapper.StudentMapper;
 import com.example.demo.model.request.StudentRequestDto;
 import com.example.demo.model.response.StudentResponseDto;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.hateoas.Link;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import java.util.Calendar;
 import java.util.Date;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class StudentMapperDecorator implements StudentMapper {
-    @Setter(onMethod=@__({@Autowired}))
+    @Setter(onMethod = @__({@Autowired}))
     StudentMapper studentMapper;
 
 
     @Override
     public StudentResponseDto studentEntityToStudentDto(Student student) {
-        var responseStudent=studentMapper.studentEntityToStudentDto(student);
-        if (responseStudent.getSignInDate()==null) {
-            responseStudent.setSignInDate(Calendar.getInstance().getTime());
-            Calendar c = Calendar.getInstance();
-            c.add(Calendar.YEAR, 5);
-            responseStudent.setYearOfGraduation(c.getTime());
-        }
 
-        //Date date=new Date();
-        //responseStudent.setSignInDate(date);
-        //responseStudent.setAge(75);
+        var responseStudent = studentMapper.studentEntityToStudentDto(student);
+
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.YEAR, 5);
+        responseStudent.setYearOfGraduation(c.getTime());
+
+        Link[] links = new Link[]{
+                linkTo(methodOn(StudentController.class).addStudent(null))
+                        .withRel("student")
+                        .withType("POST")
+                        .withDeprecation("Add Student"),
+                linkTo(methodOn(StudentController.class).listStudents(null))
+                        .withRel("student")
+                        .withType("GET")
+                        .withDeprecation("List Students"),
+                linkTo(methodOn(StudentController.class).updateStudent(null,null))
+                        .withRel("student")
+                        .withType("PUT")
+                        .withDeprecation("Update Student")
+        };
+
+        responseStudent.add(links);
         return responseStudent;
     }
 
-    public String getViewLink(String id) {
-        String url = MvcUriComponentsBuilder
-                .fromMethodName(StudentController.class, "viewInvoice", id)
-                .build().toString();
-        return url;
 
-    }
 
-    public String getDownloadLink(String id) {
-        String url = MvcUriComponentsBuilder
-                .fromMethodName(StudentController.class, "downloadInvoice",id)
-                .build().toString();
-        return url;
-
-    }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface StudentRepository extends JpaRepository<Student,Integer> {
 
-    public boolean existsStudentByEmail(String email);
-    Page<Student> findAll(Pageable pageable);
+    boolean existsStudentByEmail(String email);
+
 
 }

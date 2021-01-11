@@ -7,6 +7,7 @@ import jdk.jfr.Timestamp;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,7 +25,7 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @ApiModel(value = "Student Response")
-public class StudentResponseDto {
+public class StudentResponseDto extends RepresentationModel<StudentResponseDto> {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY,generator = "sequence_example")
     @SequenceGenerator(name = "sequence_example",initialValue = 100, allocationSize = 100)

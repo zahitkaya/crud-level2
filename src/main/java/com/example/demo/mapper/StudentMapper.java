@@ -16,11 +16,8 @@ public interface StudentMapper {
 
 
     Student studentRequestToStudentEntity(StudentRequestDto request);
-    @Mapping(source = "graduateYear",target = "yearOfGraduation")
     StudentResponseDto studentEntityToStudentDto(Student student);
-    @Mapping(source = "graduateYear",target = "yearOfGraduation")
     StudentResponseDto studentRequestToStudentResponse(StudentRequestDto request);
-    @Mapping(source = "yearOfGraduation",target = "graduateYear")
     Student studentResponseToStudentEntity(StudentResponseDto response);
 
      StudentRequestDto studentToStudentDtoWithLink(Student student);

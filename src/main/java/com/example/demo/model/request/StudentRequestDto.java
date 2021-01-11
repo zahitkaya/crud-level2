@@ -44,12 +44,10 @@ public class StudentRequestDto {
     @ApiModelProperty(value = "Registiration Date field of student object",position = 5,hidden = true)
     Date signInDate;
 
-
     @Future(message = "You need to enter future date.")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy")
     @ApiModelProperty(value = "Graduate Year field of student object",position = 6,hidden = true)
     Date graduateYear;
-
 
 
 }
